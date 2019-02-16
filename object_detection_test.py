@@ -56,14 +56,8 @@ class Object(object):
 	train = 19
 	tvmonitor = 20
 
-    #BACKGROUND = 0
-    #AE = 1
-    #PERSON = 2
 
     _LABELS = {
-        #BACKGROUND: 'BACKGROUND',
-        #CAT: 'CAT',
-        #PERSON: 'PERSON'
 		background: 'background',
 		aeroplane: 'aeroplane',
 		bicycle: 'bicycle',

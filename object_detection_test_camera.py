@@ -28,7 +28,7 @@ from aiy.vision.leds import PrivacyLed
 from aiy.toneplayer import TonePlayer
 
 from aiy.vision.inference import CameraInference
-import aiy_cat_detection
+import object_detection_test
 
 # Sound setup
 MODEL_LOAD_SOUND = ('C6w', 'c6w', 'C6w')
