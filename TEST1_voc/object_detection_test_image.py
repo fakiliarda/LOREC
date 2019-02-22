@@ -29,7 +29,7 @@ from PIL import ImageDraw
 from aiy.vision.inference import ImageInference
 # from aiy.vision.models import object_detection
 # Use my modified file instead
-import object_detection_test
+import object_detection_custom
 
 
 def _crop_center(image):
@@ -45,14 +45,14 @@ def main():
     parser.add_argument('--output', '-o', dest='output')
     args = parser.parse_args()
 
-    with ImageInference(object_detection_test.model()) as inference:
+    with ImageInference(object_detection_custom.model()) as inference:
         image = Image.open(
             io.BytesIO(sys.stdin.buffer.read())
             if args.input == '-' else args.input)
         image_center, offset = _crop_center(image)
         draw = ImageDraw.Draw(image)
         result = inference.run(image_center)
-        for i, obj in enumerate(object_detection_test.get_objects(result, 0.3, offset)):
+        for i, obj in enumerate(object_detection_custom.get_objects(result, 0.3, offset)):
             print('Object #%d: %s' % (i, str(obj)))
             x, y, width, height = obj.bounding_box
             draw.rectangle((x, y, x + width, y + height), outline='red')
