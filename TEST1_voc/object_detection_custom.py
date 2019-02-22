@@ -14,13 +14,14 @@
 """API for Object Detection tasks."""
 import math
 import sys
+import os
 
 from collections import defaultdict
 
 from aiy.vision.inference import ModelDescriptor, ThresholdingConfig, FromSparseTensorConfig
 from aiy.vision.models import utils
 
-_COMPUTE_GRAPH_NAME = '/examples/vision/LOREC/LOREC/BinaryProtospreTrainedVocDataset.binaryproto'
+_COMPUTE_GRAPH_NAME = os.getcwd()+'/preTrainedVocDataset.binaryproto'
 _MACHINE_EPS = sys.float_info.epsilon
 _SCORE_TENSOR_NAME = 'concat_1'
 _ANCHOR_TENSOR_NAME = 'concat'
@@ -114,27 +115,24 @@ class Object:
                                                    self.kind, self.score,
                                                    str(self.bounding_box))
 
-def _decode_detection_result(logit_scores, box_encodings, threshold,
-                             image_size, image_offset):
-	print(_NUM_ANCHORS, len(logit_scores), len(box_encodings) ) #added						 
-    assert len(logit_scores) == 4 * _NUM_ANCHORS
+def _decode_detection_result(logit_scores, box_encodings, threshold, image_size, image_offset):
+    print(_NUM_ANCHORS, len(logit_scores), len(box_encodings) ) #added						 
+    #assert len(logit_scores) == 4 * _NUM_ANCHORS
+    assert len(logit_scores) == _NUM_LABELS * _NUM_ANCHORS
     assert len(box_encodings) == 4 * _NUM_ANCHORS
 
     logit_threshold = _logit(max(threshold, _MACHINE_EPS))
     objs = []
 
-    for i in range(_NUM_ANCHORS):
         #logits = logit_scores[4 * i: 4 * (i + 1)]
-		logits = logit_scores[_NUM_LABELS * i: _NUM_LABELS * (i + 1)]
-        max_logit = max(logits)
-        max_logit_index = logits.index(max_logit)
-        if max_logit_index == 0 or max_logit <= logit_threshold:
-            continue  # Skip 'background' and below threshold.
-
-        bbox = _decode_bbox(box_encodings[4 * i: 4 * (i + 1)], _ANCHORS[i],
-                            image_size, image_offset)
-        objs.append(Object(bbox, max_logit_index, _logistic(max_logit)))
-
+    for i in range(_NUM_ANCHORS):
+     logits = logit_scores[_NUM_LABELS*i:_NUM_LABELS*(i+1)]
+     max_logit = max(logits)
+     max_logit_index = logits.index(max_logit)
+     if max_logit_index == 0 or max_logit <= logit_threshold:
+       continue  # Skip 'background' and below threshold.
+     bbox = _decode_bbox(box_encodings[4 * i: 4 * (i + 1)], _ANCHORS[i], image_size, image_offset)
+     objs.append(Object(bbox, max_logit_index, _logistic(max_logit)))
     return objs
 
 
