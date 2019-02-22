@@ -23,12 +23,12 @@ import argparse
 from picamera import PiCamera
 from time import time, strftime
 
-from aiy.vision.leds import Leds
-from aiy.vision.leds import PrivacyLed
+from aiy.leds import Leds
+from aiy.leds import PrivacyLed
 from aiy.toneplayer import TonePlayer
 
 from aiy.vision.inference import CameraInference
-import object_detection_test
+import object_detection_custom
 
 # Sound setup
 MODEL_LOAD_SOUND = ('C6w', 'c6w', 'C6w')
@@ -64,7 +64,7 @@ def main():
         camera.resolution = (1640, 922)
         camera.start_preview(fullscreen=True)
 
-        with CameraInference(object_detection_test.model()) as inference:
+        with CameraInference(object_detection_custom.model()) as inference:
             print("Camera inference started")
             player.play(*MODEL_LOAD_SOUND)
 
@@ -74,12 +74,12 @@ def main():
 
             for f, result in enumerate(inference.run()):
 
-                for i, obj in enumerate(object_detection_test.get_objects(result, 0.3)):
+                for i, obj in enumerate(object_detection_custom.get_objects(result, 0.3)):
 
                     print('%s Object #%d: %s' % (strftime("%Y-%m-%d-%H:%M:%S"), i, str(obj)))
                     x, y, width, height = obj.bounding_box
                     if obj.label == 'person':
-                        save_pic = True
+                        #save_pic = True
                         player.play(*BEEP_SOUND)
 
                 # save the image if there was 1 or more cats detected

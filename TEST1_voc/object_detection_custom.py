@@ -28,7 +28,7 @@ _ANCHOR_TENSOR_NAME = 'concat'
 _DEFAULT_THRESHOLD = 0.3
 _ANCHORS = utils.load_ssd_anchors('mobilenet_ssd_256res_0.125_person_cat_dog_anchors.txt')
 _NUM_ANCHORS = len(_ANCHORS)
-_NUM_LABELS = 20 #added
+_NUM_LABELS = 21 #added
 
 def _logit(x):
     return math.log(x / (1.0 - x))
@@ -109,6 +109,7 @@ class Object:
         self.bounding_box = bounding_box
         self.kind = kind
         self.score = score
+        self.label = self._LABELS[self.kind] #arda added
 
     def __str__(self):
         return 'kind=%s(%d), score=%f, bbox=%s' % (self._LABELS[self.kind],
