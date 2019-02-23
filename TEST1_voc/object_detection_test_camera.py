@@ -26,6 +26,7 @@ from time import time, strftime
 from aiy.leds import Leds
 from aiy.leds import PrivacyLed
 from aiy.toneplayer import TonePlayer
+from aiy.vision.annotator import Annotator
 
 from aiy.vision.inference import CameraInference
 import object_detection_custom
@@ -34,7 +35,6 @@ import object_detection_custom
 MODEL_LOAD_SOUND = ('C6w', 'c6w', 'C6w')
 BEEP_SOUND = ('E6q', 'C6q')
 player = TonePlayer(gpio=22, bpm=30)
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -55,7 +55,12 @@ def main():
         help='Sets the max number of pictures to take, otherwise runs forever.')
 
     args = parser.parse_args()
-
+    
+    def transform(bounding_box):
+        x, y, width, height = bounding_box
+        return (scale_x * x, scale_y * y, scale_x * (x + width), scale_y * (y + height))
+    
+    
     with PiCamera() as camera, PrivacyLed(Leds()):
         # See the Raspicam documentation for mode and framerate limits:
         # https://picamera.readthedocs.io/en/release-1.13/fov.html#sensor-modes
@@ -63,6 +68,9 @@ def main():
         camera.sensor_mode = 5
         camera.resolution = (1640, 922)
         camera.start_preview(fullscreen=True)
+        annotator = Annotator(camera)
+        #scale_x = 320 / 1640
+        #scale_y = 240 / 922
 
         with CameraInference(object_detection_custom.model()) as inference:
             print("Camera inference started")
@@ -75,9 +83,14 @@ def main():
             for f, result in enumerate(inference.run()):
 
                 for i, obj in enumerate(object_detection_custom.get_objects(result, 0.3)):
-
                     print('%s Object #%d: %s' % (strftime("%Y-%m-%d-%H:%M:%S"), i, str(obj)))
                     x, y, width, height = obj.bounding_box
+                    
+                    annotator.clear()
+                    annotator.bounding_box(obj.bounding_box)
+                    annotator.text((800,400),str(obj))
+                    annotator.update()
+
                     if obj.label == 'person':
                         #save_pic = True
                         player.play(*BEEP_SOUND)
