@@ -1,20 +1,25 @@
+#!/usr/bin/env python3
+# DISCLAIMER: this code has been taken by Google Vision Kit and edit by me.
+
 import argparse
+import os
 
 from picamera import PiCamera
 from time import time, strftime
 
-from aiy.leds import Leds
-from aiy.leds import PrivacyLed
+from aiy.vision.leds import Leds
+from aiy.vision.leds import PrivacyLed
 from aiy.toneplayer import TonePlayer
-from aiy.vision.annotator import Annotator
 
 from aiy.vision.inference import CameraInference
-import object_detection_custom
+from aiy.vision.annotator import Annotator
+import pikachu_object_detection
 
 # Sound setup
 MODEL_LOAD_SOUND = ('C6w', 'c6w', 'C6w')
 BEEP_SOUND = ('E6q', 'C6q')
 player = TonePlayer(gpio=22, bpm=30)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -35,7 +40,6 @@ def main():
         help='Sets the max number of pictures to take, otherwise runs forever.')
 
     args = parser.parse_args()
-    
 
     with PiCamera() as camera, PrivacyLed(Leds()):
         # See the Raspicam documentation for mode and framerate limits:
@@ -45,75 +49,74 @@ def main():
         camera.resolution = (1640, 1232)
         camera.start_preview(fullscreen=True)
 
-        with CameraInference(object_detection_custom.model()) as inference:
+        with CameraInference(pikachu_object_detection.model()) as inference:
             print("Camera inference started")
             player.play(*MODEL_LOAD_SOUND)
 
             last_time = time()
             pics = 0
             save_pic = False
-			enable_label = True
-			
-			# Annotator renders in software so use a smaller size and scale results
+            enable_label = True
+
+            # Annotator renders in software so use a smaller size and scale results
             # for increased performace.
             annotator = Annotator(camera, dimensions=(320, 240))
             scale_x = 320 / 1640
             scale_y = 240 / 1232
-			
+
             # Incoming boxes are of the form (x, y, width, height). Scale and
             # transform to the form (x1, y1, x2, y2).
             def transform(bounding_box):
                 x, y, width, height = bounding_box
                 return (scale_x * x, scale_y * y, scale_x * (x + width),
                     scale_y * (y + height))
-					
+
             def leftCorner(bounding_box):
                 x, y, width, height = bounding_box
                 return (scale_x * x, scale_y * y)
-				
+
             def truncateFloat(value):
                 return '%.3f'%(value)
 
             for f, result in enumerate(inference.run()):
-			
+                print("sono dentro al ciclo..")
+                print(os.getcwd() + '/pikachu_detector.binaryproto')
                 annotator.clear()
-                detections = enumerate(object_detection_custom.get_objects(result, 0.3))
-
+                detections = enumerate(pikachu_object_detection.get_objects(result, 0.3))
                 for i, obj in detections:
+                    print("sono dentro al secondo ciclo..")
                     print('%s',obj.label)
                     annotator.bounding_box(transform(obj.bounding_box), fill=0)
                     if enable_label:
                         annotator.text(leftCorner(obj.bounding_box),obj.label + " - " + str(truncateFloat(obj.score)))
-             
                     print('%s Object #%d: %s' % (strftime("%Y-%m-%d-%H:%M:%S"), i, str(obj)))
-		    x, y, width, height = obj.bounding_box
-
-
-                    if obj.label == 'person':
-                        #save_pic = True
-                        player.play(*BEEP_SOUND)
+                    x, y, width, height = obj.bounding_box
+                    if obj.label == 'PIKACHU':
+                        save_pic = True
+                        #player.play(*BEEP_SOUND)
 
                 # save the image if there was 1 or more cats detected
+
                 if save_pic:
                     # save the clean image
-                    camera.capture("images/image_%s.jpg" % strftime("%Y%m%d-%H%M%S"))
+                    #camera.capture("images/image_%s.jpg" % strftime("%Y%m%d-%H%M%S"))
                     pics += 1
                     save_pic = False
 
-                if f == args.num_frames or pics == args.num_pics:
-                    break
+                #if f == args.num_frames or pics == args.num_pics:
+                #    break
 
-                annotator.update()
                 now = time()
                 duration = (now - last_time)
+                annotator.update()
 
                 # The Movidius chip runs at 35 ms per image.
                 # Then there is some additional overhead for the object detector to
                 # interpret the result and to save the image. If total process time is
                 # running slower than 50 ms it could be a sign the CPU is geting overrun
-                if duration > 0.50:
-                    print("Total process time: %s seconds. Bonnet inference time: %s ms " %
-                          (duration, result.duration_ms))
+                #if duration > 0.50:
+                #    print("Total process time: %s seconds. Bonnet inference time: %s ms " %
+                #          (duration, result.duration_ms))
 
                 last_time = now
 
