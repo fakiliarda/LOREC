@@ -69,8 +69,8 @@ def main():
         camera.resolution = (1640, 922)
         camera.start_preview(fullscreen=True)
         annotator = Annotator(camera)
-        #scale_x = 320 / 1640
-        #scale_y = 240 / 922
+        scale_x = 320 / 1640
+        scale_y = 240 / 922
 
         with CameraInference(object_detection_custom.model()) as inference:
             print("Camera inference started")
@@ -81,14 +81,14 @@ def main():
             save_pic = False
 
             for f, result in enumerate(inference.run()):
-
+                annotator.clear()
                 for i, obj in enumerate(object_detection_custom.get_objects(result, 0.3)):
                     print('%s Object #%d: %s' % (strftime("%Y-%m-%d-%H:%M:%S"), i, str(obj)))
                     x, y, width, height = obj.bounding_box
                     
-                    annotator.clear()
+                    
                     annotator.bounding_box(obj.bounding_box)
-                    annotator.text((800,400),str(obj))
+                    annotator.text((100,100),str(obj.label))
                     annotator.update()
 
                     if obj.label == 'person':

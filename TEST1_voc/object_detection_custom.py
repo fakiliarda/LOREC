@@ -125,7 +125,7 @@ def _decode_detection_result(logit_scores, box_encodings, threshold, image_size,
     logit_threshold = _logit(max(threshold, _MACHINE_EPS))
     objs = []
 
-        #logits = logit_scores[4 * i: 4 * (i + 1)]
+    #logits = logit_scores[4 * i: 4 * (i + 1)]
     for i in range(_NUM_ANCHORS):
      logits = logit_scores[_NUM_LABELS*i:_NUM_LABELS*(i+1)]
      max_logit = max(logits)
