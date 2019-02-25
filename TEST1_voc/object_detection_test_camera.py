@@ -1,23 +1,3 @@
-#!/usr/bin/env python3
-# Copyright 2017 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""Modified Object detection library demo by chadwallacehart
-Original reference:
-
- - Takes an input image and tries to detect person or cat.
- - Beeps when a cat is seen and saves the image.
-"""
 import argparse
 
 from picamera import PiCamera
@@ -56,19 +36,14 @@ def main():
 
     args = parser.parse_args()
     
-    def transform(bounding_box):
-        x, y, width, height = bounding_box
-        return (scale_x * x, scale_y * y, scale_x * (x + width), scale_y * (y + height))
-    
-    
+
     with PiCamera() as camera, PrivacyLed(Leds()):
         # See the Raspicam documentation for mode and framerate limits:
         # https://picamera.readthedocs.io/en/release-1.13/fov.html#sensor-modes
         # Set to the highest resolution possible at 16:9 aspect ratio
-        camera.sensor_mode = 5
-        camera.resolution = (1640, 922)
+        camera.sensor_mode = 4
+        camera.resolution = (1640, 1232)
         camera.start_preview(fullscreen=True)
-        annotator = Annotator(camera)
         #scale_x = 320 / 1640
         #scale_y = 240 / 922
 
@@ -79,17 +54,41 @@ def main():
             last_time = time()
             pics = 0
             save_pic = False
+			enable_label = True
+			
+			# Annotator renders in software so use a smaller size and scale results
+            # for increased performace.
+            annotator = Annotator(camera, dimensions=(320, 240))
+            scale_x = 320 / 1640
+            scale_y = 240 / 1232
+			
+            # Incoming boxes are of the form (x, y, width, height). Scale and
+            # transform to the form (x1, y1, x2, y2).
+            def transform(bounding_box):
+                x, y, width, height = bounding_box
+                return (scale_x * x, scale_y * y, scale_x * (x + width),
+                    scale_y * (y + height))
+					
+            def leftCorner(bounding_box):
+                x, y, width, height = bounding_box
+                return (scale_x * x, scale_y * y)
+				
+            def truncateFloat(value):
+                return '%.3f'%(value)
 
             for f, result in enumerate(inference.run()):
+			
+                annotator.clear()
+                detections = enumerate(object_detection_custom.get_objects(result, 0.3))
 
-                for i, obj in enumerate(object_detection_custom.get_objects(result, 0.3)):
+                for i, obj in detections:
+                    print('%s',obj.label)
+                    annotator.bounding_box(transform(obj.bounding_box), fill=0)
+                    if enable_label:
+                        annotator.text(leftCorner(obj.bounding_box),obj.label + " - " + str(truncateFloat(obj.score)))
+             
                     print('%s Object #%d: %s' % (strftime("%Y-%m-%d-%H:%M:%S"), i, str(obj)))
-                    x, y, width, height = obj.bounding_box
-                    
-                    annotator.clear()
-                    annotator.bounding_box(obj.bounding_box)
-                    annotator.text((800,400),str(obj))
-                    annotator.update()
+					x, y, width, height = obj.bounding_box
 
                     if obj.label == 'person':
                         #save_pic = True
@@ -105,6 +104,7 @@ def main():
                 if f == args.num_frames or pics == args.num_pics:
                     break
 
+                annotator.update()
                 now = time()
                 duration = (now - last_time)
 
