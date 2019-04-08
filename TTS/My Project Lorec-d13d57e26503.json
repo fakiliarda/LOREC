@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "my-project-lorec",
+  "private_key_id": "d13d57e26503641eeb8cb04830fb93b7e0498386",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCwc0TYhf4csdRH\nlKyiABmHyHWjklEOyFF1w6Vfn7YiDXpwbVmdggEzyxuh7KyiIHtvbcbZV2wCjE0L\nF+y0JBBJCszsAo6qbjuo/gHa1eyZQSs8XG7NJ+QDCsbTd5I3ie6JBcFL8XDXkYKz\nExpkDdMRlgN2tYTkWYM3i0CxlAYJH1NkTZ6QRSLkUvsCcNuw2+8bUFEv4KO5gXsD\nimSIPMJXyAWjbzuQJUzp3kT5dAyRxmukgac4Qm2Pn2lyCMEqhnadm/t6FqaBzWG+\nffxUGlulO3v1ubatMD+kpocFZb6plZKCNuZR+ion/xFLIOzo+8d4b04RSUM2GxRP\nRXOn+gq5AgMBAAECggEANMoXo8varY0KXGv/hewPt07i2xAQTiLiNCBXXpdyrxdn\nNTGR6QyW/X7bgoNDVrHvG/Q01JtSBiUhe5spxu8vLBseGdHeCuE12iY8OdNcmLEl\nlUZ2I8y2a66Ss3uHdDRA+B+Pp//Q6b1v49FoSNzV8+H0oVRHMOYS2tA/h6EoeRu0\nU+7YthQ1EFBFJcK1WjiN+slr6fEVdDeCDyBCDO6VRlXjV0a0onbFlXNBqu9d6xVB\n9FuWEpJ0Hw0NLBQToJpOHLTnEVZx/x6wunYs7Zkl9Onb8f8ZYobhhhXMXztt9we/\ngkmqrGkxHb1kS1OMb5VFRrCC/mJeC/kclqmaczM57QKBgQD5WM1jLBhjpQoM9NUx\nwmUYKEjXOTLa5eLx+cwLC9AXabfyCGSHEQUerTLpY1Oj7akFuWRVHyZJrPihZ6R1\nbuUUqPLLcXidxF6MtXO8BKVSu7mlpFS8UVE7YIh3psloOyd/9kyXmQvqZ4q87nBk\nuX/Yk05rly4L8D59m+Cz9oiGVwKBgQC1KIlS8kHiPrtuDy0+M+Z1I19WgqHVIpKj\nHeYUD9MlXMRrBGUEuhjNk4zAa3URxRfp844Y/+q894or6+11d0RibPNncUxSYnjS\nih5TvdLCuCExwUMyFtMYaa1ML8eGsgpkQQiZZ6fDSNLVHdMEeBvJWEpD2qr9OA8O\n2aWSupmtbwKBgQCZGpbaiyvam28lb3ws1pFemPXI+X0pfbixHdHVAobeqXJiMhcP\n/DppkK3PMscbxAVh12ks/zhySrxL1yjbVqFg4zBaDS2jqfzoZ05OJ4gf2dbvR40k\nKMY5MFf7KDVJQ/FIGEMFXts7LiK5SatHncNLh3/CfoyulfC5DeqWdg10dwKBgDIj\n3RZLHPccu82zf6c2wDNtreaI03flUMa68MJeuucdbPPdzIPpahIEI7HiTA22Cm9j\nTNIYiwTwUprjet7HOvMvCpN35VLsFFrZhZlR8bKZOf7Gae3EKXsZTLDIjKX4Qy4K\nXfHvoZxIXKpFzfDvuWkZ+bwcGrVpPamzjcM1yHEbAoGAE5yS6vVlG/SpAi+LS1G5\nDnuc+R3gm4pie3upEwRibaqG4T7rj0aEsDCNkEKICVaX9yQa8zvywursw+b2Lp6S\n2xD8rjfV2KrKKgxAzZsWYl9+tdFH3jSVJBA8CMv0QkkggKLdUgYMbVRS03he3Zib\n/Yc+LOJtPI3Co6dyBft1BAQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "lorecvoice@my-project-lorec.iam.gserviceaccount.com",
+  "client_id": "117257883565559507303",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/lorecvoice%40my-project-lorec.iam.gserviceaccount.com"
+}
