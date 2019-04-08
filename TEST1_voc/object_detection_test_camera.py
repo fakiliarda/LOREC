@@ -63,19 +63,16 @@ def main():
         with CameraInference(object_detection_custom.model()) as inference:
             print("Camera inference started")
             player.play(*MODEL_LOAD_SOUND)
-
             last_time = time()
             pics = 0
             save_pic = False
-			enable_label = True
-			
-			# Annotator renders in software so use a smaller size and scale results
+            enable_label = True
+	    # Annotator renders in software so use a smaller size and scale results
             # for increased performace.
             annotator = Annotator(camera, dimensions=(320, 240))
             scale_x = 320 / 1640
             scale_y = 240 / 1232
-			
-            # Incoming boxes are of the form (x, y, width, height). Scale and
+	    # Incoming boxes are of the form (x, y, width, height). Scale and
             # transform to the form (x1, y1, x2, y2).
             def transform(bounding_box):
                 x, y, width, height = bounding_box
@@ -101,8 +98,7 @@ def main():
                         annotator.text(leftCorner(obj.bounding_box),obj.label + " - " + str(truncateFloat(obj.score)))
              
                     print('%s Object #%d: %s' % (strftime("%Y-%m-%d-%H:%M:%S"), i, str(obj)))
-		    x, y, width, height = obj.bounding_box
-
+                    x, y, width, height = obj.bounding_box
 
                     if obj.label == 'person':
                         #save_pic = True
