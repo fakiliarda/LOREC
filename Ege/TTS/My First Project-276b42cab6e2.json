@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "stone-citizen-235214",
+  "private_key_id": "276b42cab6e2dbb37b13cef71d90e65bf9ee7361",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDxvs8J65692Axg\nTqYiHxUKuz6r0p8pd07qn82oBDu+iBM2zDjnCTyvJ1UQNkgMi7pbk2pJm5fqOfp3\n7H09hzMhkgtV7E97wnerZbQTzqTju9xZLndItNUNr3Vts31XYibauqVizpYV+H6v\nRk24YqiAmmAhnfmgALZ6pfmk7182MWPJ75BJTpYGCBK6xBvD7IsA3FHFw9oAwrVE\nQUr4uUPqKBHodFmJqzoj46FndnpZyL9I1J1H+65qk/RzxnkYL8t7Hze9ZwxAt334\nCG5K6Fb40+2fQy+Hocvgef72SO5rSwjRgve+2OGApwn95nPHx0M6VfbemhzopdO1\n1s2aYCiZAgMBAAECggEAJKrY83vCKbB9/BOh3lYRln2dPWmmi58VoL/ZbU0rFLTG\nGU8zqFN92WFhZSKengyJmT9MZVrM2ZGuvIbp3i3GIyboQkGkMrTl+uDjxgdXelVx\n0DMck7IeCMPez2NktR7lntKlqE2GdVGqQYKr4jZQsaT4xNCV3t+MziCjs5E9Q1ZC\nAIq5GG+nCcZAiHBMhauY4PoxyAVvdovYDX/xIhrUJk0jPf9br0/iul6s29vtZQz1\nvUKkgLPWA9r3uu4Gtu+TVxmttidioTG5RokeYDiVKQX3mqBSbo461z73F4qM9i+y\nKwsxLRQaU7mSxPlXse/fIOADmfwNHTnKL9BcfrhD4wKBgQD7PheQg3IHm3IpnrE6\nvgCzmIs31aKnj8f7Z4qt/pyOdi89saeVfKudVuMcoECMWY++wiMERW+jwhp6dQ45\nXBwWmQrg9ikoeqm0yEm/xt1aiDI7009YsBdNqxBYGVhcHK9eBjlX2VFl7sO+/DZU\nU2bZz1GlR+dflIgiu2WCfsIYCwKBgQD2Uq28Ca0h5OShWzMB1WLfIax+LUm7p68p\n2qc44sfbtMJ9D8f4lT6AOJNldhs63KlEC6KNEH8e68Sl5N6n/BeP/LHm77KVTS9R\nPzz3BzSHdAPPoSB0iDrQrxoKNLqUbPRGYEYNV0Ldmp7rFmQEiQdreNEif7juQKlx\niFQolWXUawKBgQDyrp+Eb/ONdZFosmjvHOkAkbCoViuvPyskpHdIalA/K9ml9hyy\nQKJkcLEfzYuMBlbbJBs+3PNhcvSwpLEApwBas6nWcvB+sT2L6ouSOz1FXZloQEy8\nlhtsYnh/ILxA/VRHtitduATwORnLOUQhYA5RBfkPdc0AfjChm/IJgvdo0QKBgCQI\ndjfCppwFsthT0gNbpsoDUAtpLpcP8ZTK0pmEuz3NlIHc9CDOHEV/gThfbZ5Pt0cn\n+JBwMFhinvKxp0ylmQDMM24X9GTY1Koq+Q0d9bY253PRG0FQyGHMq5+AlSavRZCh\n9r1u3W4zdznmnZz4OqijFNzaGEBqHx9nlQAW0r2fAoGBALRS9iv1rEkFfeSU3t7c\nLsvgQn4ZC4TRmz8CjNCIUC0eRkdoRTtH+u19HPsRt3LMS68nMQUCPSgrub+f2Fs8\nBudJl5XOD2pQKBHhwRtzk68Z3Stu3+8NgGTP5ripKimT8iZZOVI+zamH+wZWMffq\noDbnc7G2HheRXqrtoQvG+7uU\n-----END PRIVATE KEY-----\n",
+  "client_email": "lorecservice@stone-citizen-235214.iam.gserviceaccount.com",
+  "client_id": "107179817627547289983",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/lorecservice%40stone-citizen-235214.iam.gserviceaccount.com"
+}
