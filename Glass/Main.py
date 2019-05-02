@@ -11,7 +11,7 @@ from aiy.toneplayer import TonePlayer
 from aiy.vision.annotator import Annotator
 
 from aiy.vision.inference import CameraInference
-from aiy.vision.models.LorecModels import ObjectDetection
+import object_detection_custom
 
 # Sound setup
 MODEL_LOAD_SOUND = ('C6w', 'c6w', 'C6w')
