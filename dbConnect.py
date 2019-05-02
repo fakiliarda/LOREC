@@ -5,7 +5,7 @@ cnx = mysql.connector.connect(user='ardafakili', password='lorec',
                               database='lorecdb')
 
 cursor = cnx.cursor()
-#query = ('INSERT INTO user (username,email,password,GlassNameDbid) values ("malcan", "ardafakili@gmail.com","123123",1);')
+#query = ('INSERT INTO user (username,email,password,GlassNameDbid) values ("arda", "ardafakili@gmail.com","123123",1);')
 query = ('SELECT * from user')
 
 cursor.execute(query)
