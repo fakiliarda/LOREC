@@ -34,7 +34,7 @@ def run_quickstart():
     client = texttospeech.TextToSpeechClient()
 
     # Set the text input to be synthesized
-    synthesis_input = texttospeech.types.SynthesisInput(text="Merhaba, Mustafa hocam. Duygu Hocam. takım arkadaşlarım gerçekten çok çalışıyorlar, maşaallah! ")
+    synthesis_input = texttospeech.types.SynthesisInput(text="insan")
 
     # Build the voice request, select the language code ("en-US") and the ssml
     # voice gender ("neutral")
