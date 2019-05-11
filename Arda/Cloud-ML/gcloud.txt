@@ -1,0 +1,31 @@
+gcloud ml-engine jobs submit training object_detection_eval_`date +%s` --job-dir=gs://home/ardafakili/chair-detector --packages tensorflow1/models/research/dist/object_detection-0.1.tar.gz,slim/dist/slim-0.1.tar.gz --module-name object_detection.eval --region us-east1 --scale-tier BASIC_GPU --python-version 3.5 --runtime-version 1.6 -- --checkpoint_dir=gs://home/ardafakili/chair-detector --eval_dir=gs://home/ardafakili/chair-detector --pipeline_config_path=gs://home/ardafakili/chair-detector/chairconfig
+
+
+
+gcloud ml-engine jobs submit training object_detection_eval_`date +%s` 
+--job-dir=gs://lorec \
+--packages tensorflow1/models/research/dist/object_detection-0.1.tar.gz,tensorflow1/models/research/slim/dist/slim-0.1.tar.gz 
+--module-name object_detection.eval 
+--region us-east1 
+--scale-tier BASIC_GPU 
+--python-version 3.5 
+--runtime-version 1.6 
+-- 
+--checkpoint_dir=gs://lorec \
+--eval_dir=gs://lorec 
+--pipeline_config_path=gs://lorec/chairconfig \
+
+
+
+
+gcloud ml-engine jobs submit training object_detection_eval_`date +%m_%d_%Y_%H_%M_%S` \
+--runtime-version 1.12 \
+--job-dir=gs://lorec/train \
+--packages tensorflow1/models/research/dist/object_detection-0.1.tar.gz,tensorflow1/models/research/slim/dist/slim-0.1.tar.gz,/tmp/pycocotools/pycocotools-2.0.tar.gz \
+--module-name object_detection.model_main \
+--region us-central1 \
+--scale-tier BASIC_GPU \
+-- \
+--model_dir=gs://lorec/train \
+--pipeline_config_path=gs://lorec/data/chair.config \
+--checkpoint_dir=gs://lorec/train
