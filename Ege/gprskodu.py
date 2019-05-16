@@ -9,13 +9,11 @@ def find(str, ch):
     for i, ltr in enumerate(str):
         if ltr == ch:
             yield i
- 
 # Enable Serial Communication
-port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=1)
+port = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=1)
 # Transmitting AT Commands to the Modem
 # '\r\n' indicates the Enter key
- 
-port.write('AT'+'\r\n')            
+port.write('AT'+'\r\n')
 rcv = port.read(100)
 print rcv
 time.sleep(.1)
@@ -47,11 +45,11 @@ while ck==1:
     if '$GNRMC' in fd:        # To Extract Lattitude and 
         ps=fd.find('$GNRMC')        # Longitude
         dif=len(fd)-ps
-        if dif &gt; 50:
+        if dif &gt == 50:
             data=fd[ps:(ps+50)]
             print data
             ds=data.find('A')        # Check GPS is valid
-            if ds &gt; 0 and ds &lt; 20:
+            if ds &gt == 0 and ds &lt == 20:
                 p=list(find(data, ","))
                 lat=data[(p[2]+1):p[3]]
                 lon=data[(p[4]+1):p[5]]
