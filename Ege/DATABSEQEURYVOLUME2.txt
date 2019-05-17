@@ -1,0 +1,124 @@
+CREATE TABLE Module (
+  Dbid INT AUTO_INCREMENT,
+  Type VARCHAR(45),
+  PRIMARY KEY (Dbid))
+  ENGINE = InnoDB;
+
+CREATE TABLE GlassName (
+  Dbid INT AUTO_INCREMENT,
+  GlassName VARCHAR(45),
+  PRIMARY KEY (Dbid))
+  ENGINE = InnoDB;
+
+CREATE TABLE Log (
+  Dbid INT AUTO_INCREMENT,
+  Tag VARCHAR(255),
+  Time TIMESTAMP,
+  LocLatitude VARCHAR(40),
+  LocLongitude VARCHAR(40),
+  GlassNameDbid INT,
+  ModuleDbid INT,
+  PRIMARY KEY (Dbid),
+  FOREIGN KEY (ModuleDbid)
+    REFERENCES Module(Dbid)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  FOREIGN KEY (GlassNameDbid)
+    REFERENCES GlassName(Dbid)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+	ENGINE = InnoDB;
+	
+CREATE TABLE user (
+  Dbid INT AUTO_INCREMENT,
+  username VARCHAR(16),
+  email VARCHAR(255),
+  password VARCHAR(32),
+  GlassNameDbid INT,
+  PRIMARY KEY (Dbid),
+  FOREIGN KEY (GlassNameDbid)
+    REFERENCES GlassName (Dbid)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+  
+  
+CREATE TABLE faceimages (
+	Dbid INT AUTO_INCREMENT PRIMARY KEY,
+	filedata BLOB
+);
+
+CREATE TABLE faceimages (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name TEXT NOT NULL,
+	photo BLOB NOT NULL,
+	biodata BLOB NOT NULL
+);
+----------------------------------------------
+----------------------------------------------
+INSERT INTO Module (Type) values ("Face");
+INSERT INTO Module (Type) values ("Object");
+INSERT INTO Module (Type) values ("GPS");
+
+INSERT INTO GlassName (GlassName) values ("LOREC001");
+INSERT INTO GlassName (GlassName) values ("LOREC002");
+INSERT INTO GlassName (GlassName) values ("LOREC003");
+
+INSERT INTO user (username,email,password,GlassNameDbid) values ("Ege", "egeeksi95@gmail.com","123123",1);
+INSERT INTO user (username,email,password,GlassNameDbid) values ("Ege", "egeeksi95@gmail.com","123123",2);
+INSERT INTO user (username,email,password,GlassNameDbid) values ("Arda", "ardafakili@gmail.com","123123",1);
+
+-----------------------Test Data---------------------------------
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-01-01 00:00:01","39.900834","32.691917","1","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-01-01 00:20:01","39.887216","32.653648","1","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Burak","2019-01-02 00:00:01","39.895183","32.679555","1","1");
+-----------------------Test Data---------------------------------
+::::LOREC001 ile yuruyus::::
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-05-01 09:00:00","39.900650","32.691970","1","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-05-01 09:00:54","39.900834","32.694029","1","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-05-01 09:09:01","39.905160","32.701279","1","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-05-01 09:12:11","39.905325","32.707241","1","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-05-01 09:25:35","39.905654","32.715657","1","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-05-01 09:55:05","39.906036","32.722143","1","1");
+
+:::::::::::OBJECT Table icin:::::::::::::::::::::
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Sandalye","2019-05-02 10:01:00","39.900650","32.691970","1","2");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Monitor","2019-05-02 11:02:00","39.900650","32.691970","1","2");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Su sisesi","2019-05-02 12:03:00","39.900650","32.691970","1","2");
+
+::::LOREC002 ile yuruyus:::: 
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-02-04 19:00:01","40.969637","29.037666","2","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-02-04 19:05:01","40.971743","29.039382","2","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-02-04 19:10:01","40.974419","29.040605","2","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-02-04 19:14:01","40.976830","29.040957","2","1");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-02-04 19:20:01","40.979594","29.039421","2","1");
+
+::::::::::GPRS NO TAG::::::::::::::::::::::::::
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("","2019-03-03 19:00:01","40.969637","29.037666","1","3");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("","2019-03-03 19:05:01","40.971743","29.039382","1","3");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("","2019-03-03 19:10:01","40.974419","29.040605","1","3");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("","2019-03-03 19:14:01","40.976830","29.040957","1","3");
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("","2019-03-03 19:20:01","40.979594","29.039421","1","3");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
