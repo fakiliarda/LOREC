@@ -1,0 +1,6 @@
+
+::::::::::::FACE icin ::::::::::::::::::::::::::
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Ege","2019-05-01 09:00:00","39.900650","32.691970","1","1");
+
+::::::::::::::::NESNE icin:::::::::::::::::::::
+INSERT INTO Log (Tag,Time,LocLatitude,LocLongitude,GlassNameDbid,ModuleDbid) values ("Sandalye","2019-05-02 10:01:00","39.900650","32.691970","1","2");
