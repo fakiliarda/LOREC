@@ -5,7 +5,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 host = '35.237.188.57'
-port = 5555
+port = 80
 
 connected = False
 decodedData=""
