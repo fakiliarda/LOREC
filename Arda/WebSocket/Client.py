@@ -1,11 +1,10 @@
 #author Arda Fakılı
-
 import socket
 import time
 import logging
 logging.basicConfig(level=logging.INFO)
 
-host = '127.0.0.1'
+host = '35.237.188.57'
 port = 5555
 
 connected = False

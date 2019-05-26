@@ -1,7 +1,5 @@
 #author Arda Fakılı
-
 import socket
-from _thread import *
 import time
 import logging
 
@@ -12,7 +10,7 @@ connections = []
 global connected
 connected = False
 
-host = '127.0.0.1'
+host = '35.237.188.57'
 port = 5555
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
