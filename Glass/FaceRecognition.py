@@ -10,13 +10,14 @@ import sys
 import PIL.Image
 import numpy as np
 import time
+import mysql.connector
 
-def start:
-        counter=1
-        connection = mysql.connector.connect(user='root', password='aey.1996',
-                              host='34.65.17.107',
-                              database='lorecdb')
-        cursor = connection.cursor()
+def start():
+    counter=1
+    connection = mysql.connector.connect(user='root', password='aey.1996',
+                          host='34.65.17.107',
+                          database='lorecdb')
+    cursor = connection.cursor()
     while 1:
         sql_query = """SELECT * from faces where isRecieved=0"""
         cursor.execute(sql_query)
@@ -27,8 +28,10 @@ def start:
         else:
             id=result[0][0]
             photo=result[0][1]
+            result=""
             save_file(photo, "unknown.jpg")
             recognize("known_people", "unknown.jpg", 1, 0.6, False)
+            print("Recognized")
 
 def save_file(data, filename):
     # Convert binary data to proper format and write it on Hard Disk
