@@ -12,12 +12,16 @@ import numpy as np
 import time
 import mysql.connector
 
+known_names = None
+known_face_encodings = None
+who=""
+
 def start():
-    counter=1
     connection = mysql.connector.connect(user='root', password='aey.1996',
                           host='34.65.17.107',
                           database='lorecdb')
     cursor = connection.cursor()
+    known_names, known_face_encodings = scan_known_people("known_people")
     while 1:
         sql_query = """SELECT * from faces where isRecieved=0"""
         cursor.execute(sql_query)
@@ -30,8 +34,17 @@ def start():
             photo=result[0][1]
             result=""
             save_file(photo, "unknown.jpg")
-            recognize("known_people", "unknown.jpg", 1, 0.6, False)
+            recognize("unknown.jpg", 1, 0.6, False)
             print("Recognized")
+            sql_query = ('INSERT INTO facetags (tag) values ("'+who+'");')
+            cursor.execute(sql_query)
+            connection.commit()
+			
+            sql_query = ('update faces set isRecieved=1 where id='+id+'')
+            cursor.execute(sql_query)
+            connection.commit()
+			
+            print("Inserted to DB")
 
 def save_file(data, filename):
     # Convert binary data to proper format and write it on Hard Disk
@@ -60,11 +73,9 @@ def scan_known_people(known_people_folder):
     return known_names, known_face_encodings
 
 
-def print_result(filename, name, distance, show_distance=False):
-    if show_distance:
-        print("{},{},{}".format(filename, name, distance))
-    else:
-        print("{},{}".format(filename, name))
+def send_result(filename, name, distance, show_distance=False):
+    print(name)
+	who=name
 
 
 def test_image(image_to_check, known_names, known_face_encodings, tolerance=0.6, show_distance=False):
@@ -83,13 +94,13 @@ def test_image(image_to_check, known_names, known_face_encodings, tolerance=0.6,
         result = list(distances <= tolerance)
 
         if True in result:
-            [print_result(image_to_check, name, distance, show_distance) for is_match, name, distance in zip(result, known_names, distances) if is_match]
+            [send_result(image_to_check, name, distance, show_distance) for is_match, name, distance in zip(result, known_names, distances) if is_match]
         else:
-            print_result(image_to_check, "unknown_person", None, show_distance)
+            send_result(image_to_check, "unknown_person", None, show_distance)
 
     if not unknown_encodings:
         # print out fact that no faces were found in image
-        print_result(image_to_check, "no_persons_found", None, show_distance)
+        send_result(image_to_check, "no_persons_found", None, show_distance)
 
 
 def image_files_in_folder(folder):
@@ -120,7 +131,6 @@ def process_images_in_process_pool(images_to_check, known_names, known_face_enco
     pool.starmap(test_image, function_parameters)
 
 def recognize(known_people_folder, image_to_check, cpus, tolerance, show_distance):
-    known_names, known_face_encodings = scan_known_people(known_people_folder)
 
     # Multi-core processing only supported on Python 3.4 or greater
     if (sys.version_info < (3, 4)) and cpus != 1:
