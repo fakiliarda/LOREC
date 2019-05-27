@@ -12,17 +12,15 @@ import numpy as np
 import time
 import mysql.connector
 
-known_names = None
-known_face_encodings = None
 who=""
 
 def start():
-    connection = mysql.connector.connect(user='root', password='aey.1996',
-                          host='34.65.17.107',
-                          database='lorecdb')
-    cursor = connection.cursor()
     known_names, known_face_encodings = scan_known_people("known_people")
     while 1:
+        connection = mysql.connector.connect(user='root', password='aey.1996',
+                              host='34.65.17.107',
+                              database='lorecdb')
+        cursor = connection.cursor()
         sql_query = """SELECT * from faces where isRecieved=0"""
         cursor.execute(sql_query)
         result=cursor.fetchall()
@@ -34,18 +32,18 @@ def start():
             photo=result[0][1]
             result=""
             save_file(photo, "unknown.jpg")
-            recognize("unknown.jpg", 1, 0.6, False)
+            recognize("unknown.jpg", 1, 0.6, False, known_names, known_face_encodings)
             print("Recognized")
-            sql_query = ('INSERT INTO facetags (tag) values ("'+who+'");')
+            sql_query = ('INSERT INTO facetags (id, tag) values ('+str(id)+',"'+who+'");')
             cursor.execute(sql_query)
             connection.commit()
 			
-            sql_query = ('update faces set isRecieved=1 where id='+id+'')
+            sql_query = ('update faces set isRecieved=1 where id='+str(id)+'')
             cursor.execute(sql_query)
             connection.commit()
 			
             print("Inserted to DB")
-
+            connection.close()
 def save_file(data, filename):
     # Convert binary data to proper format and write it on Hard Disk
     with open(filename, 'wb') as file:
@@ -75,7 +73,7 @@ def scan_known_people(known_people_folder):
 
 def send_result(filename, name, distance, show_distance=False):
     print(name)
-	who=name
+    who=name
 
 
 def test_image(image_to_check, known_names, known_face_encodings, tolerance=0.6, show_distance=False):
@@ -130,7 +128,7 @@ def process_images_in_process_pool(images_to_check, known_names, known_face_enco
 
     pool.starmap(test_image, function_parameters)
 
-def recognize(known_people_folder, image_to_check, cpus, tolerance, show_distance):
+def recognize(image_to_check, cpus, tolerance, show_distance, known_names, known_face_encodings):
 
     # Multi-core processing only supported on Python 3.4 or greater
     if (sys.version_info < (3, 4)) and cpus != 1:
