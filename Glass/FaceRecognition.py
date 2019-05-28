@@ -12,8 +12,6 @@ import numpy as np
 import time
 import mysql.connector
 
-who=""
-
 def start():
     known_names, known_face_encodings = scan_known_people("known_people")
     while 1:
@@ -32,12 +30,8 @@ def start():
             photo=result[0][1]
             result=""
             save_file(photo, "unknown.jpg")
-            recognize("unknown.jpg", 1, 0.6, False, known_names, known_face_encodings)
+            recognize("unknown.jpg", 1, 0.6, False, known_names, known_face_encodings, id)
             print("Recognized")
-            sql_query = ('INSERT INTO facetags (id, tag) values ('+str(id)+',"'+who+'");')
-            cursor.execute(sql_query)
-            connection.commit()
-			
             sql_query = ('update faces set isRecieved=1 where id='+str(id)+'')
             cursor.execute(sql_query)
             connection.commit()
@@ -71,12 +65,19 @@ def scan_known_people(known_people_folder):
     return known_names, known_face_encodings
 
 
-def send_result(filename, name, distance, show_distance=False):
+def send_result(filename, name, distance, show_distance=False, id):
     print(name)
-    who=name
+    connection = mysql.connector.connect(user='root', password='aey.1996',
+                        host='34.65.17.107',
+                        database='lorecdb')
+    cursor = connection.cursor()
+    sql_query = ('INSERT INTO facetags (id, tag) values ('+str(id)+',"'+name+'");')
+    cursor.execute(sql_query)
+    connection.commit()
+    connection.close()
 
 
-def test_image(image_to_check, known_names, known_face_encodings, tolerance=0.6, show_distance=False):
+def test_image(image_to_check, known_names, known_face_encodings, tolerance=0.6, show_distance=False, id):
     unknown_image = face_recognition.load_image_file(image_to_check)
 
     # Scale down image if it's giant so things run a little faster
@@ -92,13 +93,13 @@ def test_image(image_to_check, known_names, known_face_encodings, tolerance=0.6,
         result = list(distances <= tolerance)
 
         if True in result:
-            [send_result(image_to_check, name, distance, show_distance) for is_match, name, distance in zip(result, known_names, distances) if is_match]
+            [send_result(image_to_check, name, distance, show_distance, id) for is_match, name, distance in zip(result, known_names, distances) if is_match]
         else:
-            send_result(image_to_check, "unknown_person", None, show_distance)
+            send_result(image_to_check, "unknown_person", None, show_distance, id)
 
     if not unknown_encodings:
         # print out fact that no faces were found in image
-        send_result(image_to_check, "no_persons_found", None, show_distance)
+        send_result(image_to_check, "no_persons_found", None, show_distance, id)
 
 
 def image_files_in_folder(folder):
@@ -128,7 +129,7 @@ def process_images_in_process_pool(images_to_check, known_names, known_face_enco
 
     pool.starmap(test_image, function_parameters)
 
-def recognize(image_to_check, cpus, tolerance, show_distance, known_names, known_face_encodings):
+def recognize(image_to_check, cpus, tolerance, show_distance, known_names, known_face_encodings, id):
 
     # Multi-core processing only supported on Python 3.4 or greater
     if (sys.version_info < (3, 4)) and cpus != 1:
@@ -137,11 +138,11 @@ def recognize(image_to_check, cpus, tolerance, show_distance, known_names, known
 
     if os.path.isdir(image_to_check):
         if cpus == 1:
-            [test_image(image_file, known_names, known_face_encodings, tolerance, show_distance) for image_file in image_files_in_folder(image_to_check)]
+            [test_image(image_file, known_names, known_face_encodings, tolerance, show_distance, id) for image_file in image_files_in_folder(image_to_check)]
         else:
             process_images_in_process_pool(image_files_in_folder(image_to_check), known_names, known_face_encodings, cpus, tolerance, show_distance)
     else:
-        test_image(image_to_check, known_names, known_face_encodings, tolerance, show_distance)
+        test_image(image_to_check, known_names, known_face_encodings, tolerance, show_distance, id)
 
 
 if __name__ == "__main__":
