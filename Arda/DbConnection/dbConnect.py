@@ -31,7 +31,7 @@ else:
 #cursor.execute(query)
 cnx.commit()
 
-query = ('delete from faces')
+query = ('delete from facetags')
 cursor.execute(query)
 cnx.commit()
 
