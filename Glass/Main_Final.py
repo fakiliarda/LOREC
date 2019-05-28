@@ -23,7 +23,7 @@ MODEL_LOAD_SOUND = ('C6w', 'c6w', 'C6w')
 BEEP_SOUND = ('E6q', 'C6q')
 player = TonePlayer(gpio=22, bpm=30)
 
-imageCounter=0
+
 who=""
 
 def main():
@@ -43,11 +43,6 @@ def main():
         dest='num_pics',
         default=-1,
         help='Sets the max number of pictures to take, otherwise runs forever.')
-
-    cnx = mysql.connector.connect(user='root', password='aey.1996',
-                             host='34.65.17.107',
-                            database='lorecdb')
-    cursor = cnx.cursor()
 
 
     args = parser.parse_args()
@@ -76,9 +71,13 @@ def main():
                 
         def objdet():
             with CameraInference(ObjectDetection.model()) as inference:
+                cnx = mysql.connector.connect(user='root', password='aey.1996',
+                                 host='34.65.17.107',
+                                 database='lorecdb')
+                cursor = cnx.cursor()
                 print("Camera inference started")
                 player.play(*MODEL_LOAD_SOUND)
-            
+                imageCounter=0
                 last_time = time()
                 pics = 0
                 save_pic = False
@@ -118,28 +117,38 @@ def main():
                         dt = datetime.datetime.now()
                         if obj.label == 'person':
                             camera.capture("unknown.jpg")
-                            sendImage.insertBLOB(imageCounter, "unknown.jpg")
                             os.system("ffplay -nodisp -autoexit  LorecObjectSoundFiles/Kisialgilaniyor.mp3")
+                            sendImage.insertBLOB(imageCounter, "unknown.jpg")
                             while 1:
+                                print("Image Counter = "+str(imageCounter)+"")
                                 cnx.close()
                                 cnx = mysql.connector.connect(user='root', password='aey.1996',
                                     host='34.65.17.107',
                                     database='lorecdb')
                                 cursor = cnx.cursor()
-                                query = ('select tag from facetags where id='+imageCounter+'')
-                                time.sleep(5)
+                                query = ('select tag from facetags where id='+str(imageCounter)+'')
+                                #sleep(0.2)
                                 print("Waiting for face tag") 
                                 cursor.execute(query)
-                                result=cursor.fetchAll()
+                                result=cursor.fetchall()
                                 if not result:
                                     print("Waiting") 
                                 else:
                                     for something in result:
                                         print(something)
                                     who=result[0][0]
-                                    os.system("ffplay -nodisp -autoexit  LorecObjectSoundFiles/"+who+".mp3")
-                                    imageCounter=imageCounter+1
-                                    break
+                                    if who == 'unknown':
+                                        os.system("ffplay -nodisp -autoexit  LorecObjectSoundFiles/Insan.mp3")
+                                        imageCounter=imageCounter+1
+                                        break
+                                    elif who == 'no_persons':
+                                        os.system("ffplay -nodisp -autoexit  LorecObjectSoundFiles/Insan.mp3")
+                                        imageCounter=imageCounter+1
+                                        break
+                                    else:
+                                        os.system("ffplay -nodisp -autoexit  LorecObjectSoundFiles/"+who+".mp3")
+                                        imageCounter=imageCounter+1
+                                        break
                             query = ("INSERT INTO Log (Tag, Time, LocLatitude, LocLongitude, GlassNameDbid, ModuleDbid) VALUES ('"+who+"', '"+str(dt) +"', '39.888346', '32.655403', '1', '2')")
                             cursor.execute(query)
                             for something in cursor:
@@ -186,11 +195,8 @@ def main():
                     # Then there is some additional overhead for the object detector to
                     # interpret the result and to save the image. If total process time is
                     # running slower than 50 ms it could be a sign the CPU is geting overrun
-                    if duration > 0.50:
-                        print("Total process time: %s seconds. Bonnet inference time: %s ms " %
-                              (duration, result.duration_ms))
-
-                    last_time = now
+                    #if duration > 0.50:
+                    #    print("CPU Overrun")
 
 
         
