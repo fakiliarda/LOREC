@@ -32,7 +32,7 @@ def insertBLOB(id, photo):
         if(connection.is_connected()):
             cursor.close()
             connection.close()
-            print("Image has sent")
+            print("MySQL connection is closed")
 
 if __name__ == '__main__':
 	print('sendImage.py')
