@@ -24,7 +24,7 @@ def start():
         result=cursor.fetchall()
         if not result:
             print("No recieved images...Waiting...")
-            time.sleep(5)
+            #time.sleep(0.2)
         else:
             id=result[0][0]
             photo=result[0][1]
@@ -65,7 +65,7 @@ def scan_known_people(known_people_folder):
     return known_names, known_face_encodings
 
 
-def send_result(filename, name, distance, show_distance=False, id):
+def send_result(filename, name, distance, id, show_distance=False):
     print(name)
     connection = mysql.connector.connect(user='root', password='aey.1996',
                         host='34.65.17.107',
@@ -77,7 +77,7 @@ def send_result(filename, name, distance, show_distance=False, id):
     connection.close()
 
 
-def test_image(image_to_check, known_names, known_face_encodings, tolerance=0.6, show_distance=False, id):
+def test_image(image_to_check, known_names, known_face_encodings, id, tolerance=0.6, show_distance=False):
     unknown_image = face_recognition.load_image_file(image_to_check)
 
     # Scale down image if it's giant so things run a little faster
@@ -93,13 +93,13 @@ def test_image(image_to_check, known_names, known_face_encodings, tolerance=0.6,
         result = list(distances <= tolerance)
 
         if True in result:
-            [send_result(image_to_check, name, distance, show_distance, id) for is_match, name, distance in zip(result, known_names, distances) if is_match]
+            [send_result(image_to_check, name, distance, id, show_distance) for is_match, name, distance in zip(result, known_names, distances) if is_match]
         else:
-            send_result(image_to_check, "unknown_person", None, show_distance, id)
+            send_result(image_to_check, "unknown_person", None, id, show_distance)
 
     if not unknown_encodings:
         # print out fact that no faces were found in image
-        send_result(image_to_check, "no_persons_found", None, show_distance, id)
+        send_result(image_to_check, "no_persons", None, id, show_distance)
 
 
 def image_files_in_folder(folder):
@@ -138,11 +138,11 @@ def recognize(image_to_check, cpus, tolerance, show_distance, known_names, known
 
     if os.path.isdir(image_to_check):
         if cpus == 1:
-            [test_image(image_file, known_names, known_face_encodings, tolerance, show_distance, id) for image_file in image_files_in_folder(image_to_check)]
+            [test_image(image_file, known_names, known_face_encodings, id, tolerance, show_distance) for image_file in image_files_in_folder(image_to_check)]
         else:
             process_images_in_process_pool(image_files_in_folder(image_to_check), known_names, known_face_encodings, cpus, tolerance, show_distance)
     else:
-        test_image(image_to_check, known_names, known_face_encodings, tolerance, show_distance, id)
+        test_image(image_to_check, known_names, known_face_encodings, id, tolerance, show_distance)
 
 
 if __name__ == "__main__":
