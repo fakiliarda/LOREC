@@ -15,7 +15,7 @@ def insertBLOB(id, photo):
                               database='lorecdb')
         cursor = connection.cursor()
         sql_insert_blob_query = """ INSERT INTO `faces`
-                          (`id`,`photo`) VALUES (%s,%s)"""
+                          (`id`,`photo`,`isRecieved`) VALUES (%s,%s,0)"""
         personPicture = convertToBinaryData(photo)
         #Convert data into tuple format
         print('inserting')
@@ -24,16 +24,6 @@ def insertBLOB(id, photo):
         for something in cursor:
            print(something)
         connection.commit()
-        print("waiting")
-        time.sleep(5)
-        sql_query = """ select * from `facetags` where id=%s """
-        print(sql_query, id)
-        cursor.execute(sql_query, (id, ))
-        for something in cursor:
-           print(something)
-           print('second')
-        connection.commit()
-		    
     except mysql.connector.Error as error :
         connection.rollback()
         print("Failed inserting BLOB data into MySQL table {}".format(error))

@@ -7,6 +7,7 @@ from time import time, strftime
 from time import sleep
 import datetime
 import threading
+import sendImage
 
 from aiy.leds import Leds
 from aiy.leds import PrivacyLed
@@ -21,6 +22,9 @@ from aiy.vision.models.LorecModels import FaceDetection
 MODEL_LOAD_SOUND = ('C6w', 'c6w', 'C6w')
 BEEP_SOUND = ('E6q', 'C6q')
 player = TonePlayer(gpio=22, bpm=30)
+
+imageCounter=0
+who=""
 
 def main():
     parser = argparse.ArgumentParser()
@@ -109,13 +113,34 @@ def main():
                         #annotator.bounding_box(transform(obj.bounding_box), fill=0)
                         #if enable_label:
                             #annotator.text(leftCorner(obj.bounding_box),obj.label + " - " + str(truncateFloat(obj.score)))
-             
                         print('%s Object #%d: %s' % (strftime("%Y-%m-%d-%H:%M:%S"), i, str(obj)))
                         x, y, width, height = obj.bounding_box
                         dt = datetime.datetime.now()
                         if obj.label == 'person':
+                            camera.capture("unknown.jpg")
+                            sendImage.insertBLOB(imageCounter, "unknown.jpg")
                             os.system("ffplay -nodisp -autoexit  LorecObjectSoundFiles/Kisialgilaniyor.mp3")
-                            query = ("INSERT INTO Log (Tag, Time, LocLatitude, LocLongitude, GlassNameDbid, ModuleDbid) VALUES ('İnsan', '"+str(dt) +"', '39.888346', '32.655403', '1', '2')")
+                            while 1:
+                                cnx.close()
+                                cnx = mysql.connector.connect(user='root', password='aey.1996',
+                                    host='34.65.17.107',
+                                    database='lorecdb')
+                                cursor = cnx.cursor()
+                                query = ('select tag from facetags where id='+imageCounter+'')
+                                time.sleep(5)
+                                print("Waiting for face tag") 
+                                cursor.execute(query)
+                                result=cursor.fetchAll()
+                                if not result:
+                                    print("Waiting") 
+                                else:
+                                    for something in result:
+                                        print(something)
+                                    who=result[0][0]
+                                    os.system("ffplay -nodisp -autoexit  LorecObjectSoundFiles/"+who+".mp3")
+                                    imageCounter=imageCounter+1
+                                    break
+                            query = ("INSERT INTO Log (Tag, Time, LocLatitude, LocLongitude, GlassNameDbid, ModuleDbid) VALUES ('"+who+"', '"+str(dt) +"', '39.888346', '32.655403', '1', '2')")
                             cursor.execute(query)
                             for something in cursor:
                                 print(something)
